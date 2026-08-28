@@ -6,7 +6,7 @@ from flask import Flask, request, render_template_string, send_file
 app = Flask(__name__)
 ui_callback = None
 
-# Dictionary to hold files shared from PC to Mobile
+# In-memory mapping of filenames to active host file paths for mobile retrieval
 shared_files = {}
 
 HTML_TEMPLATE = """
@@ -117,7 +117,7 @@ HTML_TEMPLATE = """
     <h2>LocalDrop</h2>
     <p>Dashboard Connection Active</p>
     
-    <!-- Upload Section (Mobile -> PC) -->
+    <!-- Client-to-Host Payload Transmission Interface -->
     <form action="/upload" method="post" enctype="multipart/form-data">
       <label for="file-upload" class="custom-file-upload" id="file-label">
           Tap to select files
@@ -126,7 +126,7 @@ HTML_TEMPLATE = """
       <button type="submit" id="submit-btn" class="send-btn">Send to Dashboard</button>
     </form>
     
-    <!-- Download Section (PC -> Mobile) -->
+    <!-- Host-to-Client File Retrieval Interface -->
     <div style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; text-align: left;">
         <h3 style="font-size: 15px; margin-bottom: 15px; color: #00d2ff; text-align: center;">Available from PC</h3>
         {% if files %}

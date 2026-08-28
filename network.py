@@ -3,7 +3,7 @@ import socket
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        # Δεν χρειάζεται να συνδεθεί πραγματικά, απλά βρίσκει το interface
+        # Resolve primary network interface via dummy UDP connection routing
         s.connect(('10.255.255.255', 1))
         ip = s.getsockname()[0]
     except Exception:

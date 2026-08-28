@@ -9,14 +9,14 @@ import ctypes
 from network import get_local_ip
 import server
 
-# --- Force crisp UI on high-resolution displays ---
+# Enhance UI rendering clarity on high-DPI displays
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
 except Exception:
     pass
 
 def main_ui(page: ft.Page):
-    # --- Window Styling ---
+    # Configure application window properties and thematic elements
     page.title = "LocalDrop Control Center"
     page.theme_mode = ft.ThemeMode.DARK
     page.window.width = 800
@@ -25,7 +25,7 @@ def main_ui(page: ft.Page):
     page.padding = 0
     page.window.resizable = False
     
-    # --- System Stats Setup ---
+    # Initialize system telemetry and storage capacity metrics
     hostname = socket.gethostname()
     try:
         total, used, free = shutil.disk_usage(os.path.expanduser("~"))
@@ -41,17 +41,15 @@ def main_ui(page: ft.Page):
     
     current_file_data = []
 
-    # ==========================================
-    # 1. NATIVE WINDOWS DIALOG: Save Incoming Files
-    # ==========================================
+    # Subroutine: Native directory selection for incoming payloads
     def open_save_picker(e):
         incoming_dialog.open = False
         page.update()
         
-        # Open a native Windows folder picker safely
+        # Isolate and elevate native tkinter directory selection interface
         root = tk.Tk()
-        root.withdraw()  # Hide the main tkinter window
-        root.attributes('-topmost', True)  # Force it to the front
+        root.withdraw()
+        root.attributes('-topmost', True)
         selected_dir = filedialog.askdirectory(title=f"Select folder to save {len(current_file_data)} file(s)")
         root.destroy()
 
@@ -117,11 +115,9 @@ def main_ui(page: ft.Page):
     
     page.overlay.append(incoming_dialog)
 
-    # ==========================================
-    # 2. NATIVE WINDOWS DIALOG: Share to Mobile
-    # ==========================================
+    # Subroutine: Native file selection for outbound sharing
     def open_file_picker(e):
-        # Open a native Windows file picker safely
+        # Isolate and elevate native tkinter file selection interface
         root = tk.Tk()
         root.withdraw()
         root.attributes('-topmost', True)
@@ -159,7 +155,7 @@ def main_ui(page: ft.Page):
             snack.open = True  # type: ignore
             page.update()
 
-    # --- 3. Thread-Safe PubSub Logic ---
+    # Implement thread-safe Publish-Subscribe messaging protocol
     def on_pubsub_message(message):
         current_file_data.clear()
         current_file_data.extend(message)
@@ -171,7 +167,7 @@ def main_ui(page: ft.Page):
     def handle_new_files(file_data):
         page.pubsub.send_all(file_data)
 
-    # --- 4. Network Setup & QR Code ---
+    # Initialize network socket configurations and generate access QR code
     port = 5000
     local_ip = get_local_ip()
     upload_url = f"http://{local_ip}:{port}"
@@ -184,7 +180,7 @@ def main_ui(page: ft.Page):
     img = qr.make_image(fill_color="#e0e0e0", back_color="#1a252c")
     img.save(qr_path)  # type: ignore
 
-    # --- 5. UI Layout Assembly ---
+    # Construct primary user interface layout and visual hierarchies
     border_style = ft.Border(
         top=ft.BorderSide(1, "#19ffffff"),
         right=ft.BorderSide(1, "#19ffffff"),
